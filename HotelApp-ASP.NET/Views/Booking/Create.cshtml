@@ -1,0 +1,78 @@
+﻿@model HotelApp_ASP.NET.ViewModels.BookingsModels.BookingFormModel
+
+@{
+    ViewData["Title"] = "Създаване на резервация";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Нова резервация</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="GuestName" class="form-label">Име на гост</label>
+                        <input asp-for="GuestName" class="form-control" placeholder="Въведете име..." />
+                        <span asp-validation-for="GuestName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="GuestEmail" class="form-label">Имейл</label>
+                        <input asp-for="GuestEmail" class="form-control" placeholder="email@example.com" />
+                        <span asp-validation-for="GuestEmail" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="GuestPhone" class="form-label">Телефон</label>
+                        <input asp-for="GuestPhone" class="form-control" placeholder="+359..." />
+                        <span asp-validation-for="GuestPhone" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="RoomId" class="form-label">Стая</label>
+                        <select asp-for="RoomId" class="form-select">
+                            <option value="">-- Изберете стая --</option>
+                            @foreach (var room in Model.RoomType)
+                            {
+                                <option value="@room.Id">@room.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RoomId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label asp-for="CheckInDate" class="form-label">Дата на настаняване</label>
+                        <input asp-for="CheckInDate" class="form-control" type="date" />
+                        <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="CheckOutDate" class="form-label">Дата на напускане</label>
+                        <input asp-for="CheckOutDate" class="form-control" type="date" />
+                        <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Назад към списъка
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-lg">></i> Запази резервацията
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

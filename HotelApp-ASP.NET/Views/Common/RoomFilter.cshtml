@@ -1,0 +1,87 @@
+﻿@* @model HotelApp_ASP.NET.ViewModels.CommonViewModels.RoomFilterViewModel
+
+@{
+    ViewData["Title"] = "Филтриране на стаи";
+}
+
+<div class="container mt-4">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Търсене на налични стаи</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Filter" method="get">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="CheckInDate" class="form-label">Дата на настаняване</label>
+                        <input asp-for="CheckInDate" class="form-control" type="date" />
+                        <span asp-validation-for="CheckInDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="CheckOutDate" class="form-label">Дата на напускане</label>
+                        <input asp-for="CheckOutDate" class="form-control" type="date" />
+                        <span asp-validation-for="CheckOutDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="RoomTypeId" class="form-label">Тип стая</label>
+                        <select asp-for="RoomTypeId" class="form-select">
+                            <option value="">-- Всички типове --</option>
+                            <!-- Тук можете да подадете и колекция от типове стаи през ViewBag/ViewModel, ако е необходимо -->
+                        </select>
+                        <span asp-validation-for="RoomTypeId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-search"></i> Филтрирай
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Резултати от филтрирането -->
+    @if (Model.AvailableRooms != null && Model.AvailableRooms.Any())
+    {
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">Налични стаи</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Номер на стая</th>
+                                <th>Тип стая</th>
+                                <th>Цена на нощувка</th>
+                                <th class="text-end">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var room in Model.AvailableRooms)
+                            {
+                                <tr>
+                                    <td><strong>@room.RoomNumber</strong></td>
+                                    <td>@room.RoomTypeName</td>
+                                    <td>@room.PricePerNight.ToString("C2")</td>
+                                    <td class="text-end">
+                                        <a asp-controller="Bookings" asp-action="Create" asp-route-roomId="@room.Id" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-calendar-plus"></i> Резервирай
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else if (Model.AvailableRooms != null)
+    {
+        <div class="alert alert-info text-center" role="alert">
+            Няма намерени свободни стаи за избрания период и критерии.
+        </div>
+    }
+</div> *@
