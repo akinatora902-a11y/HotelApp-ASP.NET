@@ -1,8 +1,8 @@
-﻿using HotelApp_ASP.NET.Data.Models;
+﻿using HotelApp.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace HotelApp_ASP.NET.Data.Configurations
+namespace HotelApp.Data.Configurations
 {
     public class RoomConfigurations : IEntityTypeConfiguration<RoomEntity>
     {

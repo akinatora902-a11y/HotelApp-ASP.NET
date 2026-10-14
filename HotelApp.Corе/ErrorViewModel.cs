@@ -1,4 +1,4 @@
-namespace HotelApp_ASP.NET.Models
+namespace HotelApp_ASP.NET.ViewModels
 {
     public class ErrorViewModel
     {

@@ -1,4 +1,4 @@
-using HotelApp_ASP.NET.Models;
+using HotelApp_ASP.NET.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

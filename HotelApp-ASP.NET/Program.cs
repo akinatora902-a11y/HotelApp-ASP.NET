@@ -1,4 +1,7 @@
-using HotelApp_ASP.NET.Data;
+using HotelApp.Corе.Contracts;
+using HotelApp.Corе.Services;
+using HotelApp.Data;
+using HotelApp_ASP.NET.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,8 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<HotelDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddApplicationDbContext(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 

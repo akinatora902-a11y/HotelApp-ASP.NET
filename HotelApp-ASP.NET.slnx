@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="HotelApp-ASP.NET/HotelApp-ASP.NET.csproj" />
+  <Project Path="HotelApp.Common/HotelApp.Common.csproj" Id="20b7754c-8895-4202-9825-89ce70890169" />
+  <Project Path="HotelApp.Corе/HotelApp.Corе.csproj" Id="a3861fd8-a68a-4c4d-8ea2-ec5b9a851390" />
+  <Project Path="HotelApp.Data/HotelApp.Data.csproj" Id="f98a6d11-a846-4835-9e9d-c420a5bad640" />
 </Solution>

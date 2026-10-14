@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace HotelApp_ASP.NET.ViewModels.BookingsModels
+﻿namespace HotelApp_ASP.NET.ViewModels.BookingsModels
 {
     public class BookingFormModel
     {

@@ -1,7 +1,7 @@
-﻿using HotelApp_ASP.NET.Data.Configurations;
+﻿using HotelApp.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelApp_ASP.NET.Data
+namespace HotelApp.Data
 {
     public class HotelDbContext : DbContext
     {

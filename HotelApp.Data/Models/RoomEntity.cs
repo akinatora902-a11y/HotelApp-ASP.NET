@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HotelApp_ASP.NET.Data.Models
+namespace HotelApp.Data.Models
 {
     public class RoomEntity
     {

@@ -1,4 +1,4 @@
-﻿using HotelApp_ASP.NET.Data.Models;
+﻿using HotelApp.Data.Models;
 
 namespace HotelApp_ASP.NET.ViewModels.RoomsModels
 {
