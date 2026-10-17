@@ -1,4 +1,5 @@
-﻿using HotelApp_ASP.NET.ViewModels.BookingsModels;
+﻿using HotelApp.Corе.DataTransferObjects;
+using HotelApp_ASP.NET.ViewModels.BookingsModels;
 
 namespace HotelApp.Corе.Contracts
 {
@@ -8,5 +9,7 @@ namespace HotelApp.Corе.Contracts
         BookingDetailsViewModel Detail(int id);
         BookingFormModel CreateFormModel ();
         bool CreateBooking(BookingFormModel model);
+        public IEnumerable<AvailableRoomsDropdown> availableRooms();
+        bool DeleteBooking (int id);
     }
 }

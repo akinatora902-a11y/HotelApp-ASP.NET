@@ -1,0 +1,42 @@
+﻿@model HotelApp_ASP.NET.ViewModels.BookingsModels.BookingDetailsViewModel
+
+@{
+    ViewData["Title"] = "Изтриване на резервация";
+}
+
+<h2 class="text-center text-danger">@ViewData["Title"]</h2>
+<hr />
+
+<div class="alert alert-danger text-center" role="alert">
+    <strong>Внимание!</strong> Сигурни ли сте, че искате да изтриете тази резервация? Това действие е необратимо.
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <p class="mb-2"><span class="fw-bold">Guest Name:</span> @Model.GuestName</p>
+                <p class="mb-2"><span class="fw-bold">Email:</span> @Model.GuestEmail</p>
+                <p class="mb-2"><span class="fw-bold">Phone:</span> @Model.GuestPhone</p>
+                <p class="mb-2"><span class="fw-bold">Check-in date:</span> @Model.CheckInDate</p>
+                <p class="mb-2"><span class="fw-bold">Date of departure:</span> @Model.CheckOutDate</p>
+                <p class="mb-2"><span class="fw-bold">Room number:</span> @Model.RoomNumber</p>
+                <p class="mb-2"><span class="fw-bold">Room type:</span> @Model.RoomTypeName</p>
+                <p class="mb-4"><span class="fw-bold">Total amount:</span> @Model.TotalPrice.ToString("C2")</p>
+
+                <form asp-controller="Booking" asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post">
+                    <!-- Скритото поле изпраща DELETE заявка към [HttpDelete] в контролера -->
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger mb-2 w-100 p-3 fw-bold">Delete</button>
+                    <a asp-controller="Booking" asp-action="Index" class="btn btn-secondary mb-2 w-100 p-3 fw-bold">Back to the list</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

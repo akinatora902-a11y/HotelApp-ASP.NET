@@ -53,5 +53,32 @@ namespace HotelApp_ASP.NET.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var model = bookingService.Detail(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            bool delete = bookingService.DeleteBooking(id);
+
+            if (!delete)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

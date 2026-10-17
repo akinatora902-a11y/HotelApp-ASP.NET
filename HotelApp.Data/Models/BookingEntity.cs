@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static HotelApp.Common.ValidationConstants.EntityValidation;
 
 namespace HotelApp.Data.Models
 {
@@ -9,20 +10,24 @@ namespace HotelApp.Data.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 2)]
+        [StringLength(GuestNameMaxLength, MinimumLength = GuestNameMinLength)]
         public string GuestName { get; set; }
 
         [EmailAddress]
+        [StringLength(GuestEmailMaxLength, MinimumLength = GuestEmailMinLength)]
         public string GuestEmail { get; set; }
 
         [Required]
-        [Phone] 
+        [Phone]
+        [StringLength(GuestPhoneMaxLength, MinimumLength = GuestPhoneMinLength)]
         public string GuestPhone { get; set; } = null!;
 
         [Required]
+        [Column(TypeName = "date")]
         public DateTime CheckInDate { get; set; }
 
         [Required]
+        [Column(TypeName = "date")]
         public DateTime CheckOutDate { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]

@@ -1,14 +1,24 @@
-﻿namespace HotelApp_ASP.NET.ViewModels.BookingsModels
+﻿using HotelApp.Corе.DataTransferObjects;
+using System.ComponentModel.DataAnnotations;
+
+namespace HotelApp_ASP.NET.ViewModels.BookingsModels
 {
     public class BookingFormModel
     {
         public int RoomId { get; set; }
-        public int RoomNumber { get; set; }
+
         public string GuestName { get; set; } = null!;
+
         public string GuestEmail { get; set; } = null!;
+
         public string GuestPhone { get; set; } = null!;
-        public DateTime CheckInDate { get; set; }
-        public DateTime CheckOutDate { get; set; }
-        public IEnumerable<DropdownRoomType> RoomType { get; set; } = new List<DropdownRoomType>();
+
+        [DataType(DataType.Date)]
+        public DateTime CheckInDate { get; set; } = DateTime.Today;
+
+        [DataType(DataType.Date)]
+        public DateTime CheckOutDate { get; set; } = DateTime.Today;
+        public bool IsAvailabal { get; set; }
+        public IEnumerable<AvailableRoomsDropdown> Rooms { get; set; } = new List<AvailableRoomsDropdown>();
     }
 }

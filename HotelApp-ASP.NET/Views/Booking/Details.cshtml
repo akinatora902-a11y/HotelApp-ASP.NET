@@ -1,7 +1,7 @@
 ﻿@model HotelApp_ASP.NET.ViewModels.BookingsModels.BookingDetailsViewModel
 
 @{
-    ViewBag.Title = "Детайли за резервация";
+    ViewBag.Title = "Reservation Details";
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
@@ -11,8 +11,6 @@
     <div class="col-md-8">
         <div class="card shadow">
             <div class="card-body">
-              
-
                 <p class="mb-2"><span class="fw-bold">Guest Name:</span> @Model.GuestName</p>
                 <p class="mb-2"><span class="fw-bold">Email:</span> @Model.GuestEmail</p>
                 <p class="mb-2"><span class="fw-bold">Phone:</span> @Model.GuestPhone</p>
@@ -23,8 +21,6 @@
                 <p class="mb-4"><span class="fw-bold">Total amount:</span> @Model.TotalPrice.ToString("C2")</p>
 
                 <a asp-controller="Booking" asp-action="Index" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Back to the list</a>
-
-                <a asp-controller="Booking" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Edit</a>
             </div>
         </div>
     </div>

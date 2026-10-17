@@ -1,13 +1,13 @@
 ﻿@model HotelApp_ASP.NET.ViewModels.BookingsModels.BookingFormModel
 
 @{
-    ViewData["Title"] = "Създаване на резервация";
+    ViewData["Title"] = "Create a Reservation";
 }
 
 <div class="container mt-4">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
-            <h3 class="mb-0">Нова резервация</h3>
+            <h3 class="mb-0">New Reservation</h3>
         </div>
         <div class="card-body">
             <form asp-action="Create" method="post">
@@ -15,12 +15,12 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label asp-for="GuestName" class="form-label">Име на гост</label>
-                        <input asp-for="GuestName" class="form-control" placeholder="Въведете име..." />
+                        <label asp-for="GuestName" class="form-label">Guest Name</label>
+                        <input asp-for="GuestName" class="form-control" placeholder="Enter a name..." />
                         <span asp-validation-for="GuestName" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="GuestEmail" class="form-label">Имейл</label>
+                        <label asp-for="GuestEmail" class="form-label">Email</label>
                         <input asp-for="GuestEmail" class="form-control" placeholder="email@example.com" />
                         <span asp-validation-for="GuestEmail" class="text-danger"></span>
                     </div>
@@ -28,18 +28,14 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label asp-for="GuestPhone" class="form-label">Телефон</label>
+                        <label asp-for="GuestPhone" class="form-label">Phone</label>
                         <input asp-for="GuestPhone" class="form-control" placeholder="+359..." />
                         <span asp-validation-for="GuestPhone" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="RoomId" class="form-label">Стая</label>
-                        <select asp-for="RoomId" class="form-select">
-                            <option value="">-- Изберете стая --</option>
-                            @foreach (var room in Model.RoomType)
-                            {
-                                <option value="@room.Id">@room.Name</option>
-                            }
+                        <label asp-for="RoomId" class="form-label">Room</label>
+                        <select asp-for="RoomId" asp-items="@(new SelectList(Model.Rooms, "Id", "RoomType"))" class="form-select">
+                            <option value="">-- Select a room --</option>
                         </select>
                         <span asp-validation-for="RoomId" class="text-danger"></span>
                     </div>
@@ -47,12 +43,12 @@
 
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <label asp-for="CheckInDate" class="form-label">Дата на настаняване</label>
+                        <label asp-for="CheckInDate" class="form-label">Check-in Date</label>
                         <input asp-for="CheckInDate" class="form-control" type="date" />
                         <span asp-validation-for="CheckInDate" class="text-danger"></span>
                     </div>
                     <div class="col-md-6">
-                        <label asp-for="CheckOutDate" class="form-label">Дата на напускане</label>
+                        <label asp-for="CheckOutDate" class="form-label">Date of Departure</label>
                         <input asp-for="CheckOutDate" class="form-control" type="date" />
                         <span asp-validation-for="CheckOutDate" class="text-danger"></span>
                     </div>
@@ -60,10 +56,10 @@
 
                 <div class="d-flex justify-content-between">
                     <a asp-action="Index" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left"></i> Назад към списъка
+                        <i class="bi bi-arrow-left"></i> Back to the list
                     </a>
                     <button type="submit" class="btn btn-success">
-                        <i class="bi bi-check-lg">></i> Запази резервацията
+                        <i class="bi bi-check-lg"></i> Confirm your reservation
                     </button>
                 </div>
             </form>

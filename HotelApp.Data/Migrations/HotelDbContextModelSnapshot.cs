@@ -17,12 +17,12 @@ namespace HotelApp_ASP.NET.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.31")
+                .HasAnnotation("ProductVersion", "8.0.32")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HotelApp_ASP.NET.Data.Models.BookingEntity", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.BookingEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,14 +31,15 @@ namespace HotelApp_ASP.NET.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CheckInDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("CheckOutDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("GuestEmail")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("GuestName")
                         .IsRequired()
@@ -47,7 +48,8 @@ namespace HotelApp_ASP.NET.Migrations
 
                     b.Property<string>("GuestPhone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
@@ -174,7 +176,7 @@ namespace HotelApp_ASP.NET.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelApp_ASP.NET.Data.Models.RoomEntity", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.RoomEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,7 +298,7 @@ namespace HotelApp_ASP.NET.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelApp_ASP.NET.Data.Models.RoomTypeEntity", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.RoomTypeEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -308,7 +310,8 @@ namespace HotelApp_ASP.NET.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -392,9 +395,9 @@ namespace HotelApp_ASP.NET.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HotelApp_ASP.NET.Data.Models.BookingEntity", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.BookingEntity", b =>
                 {
-                    b.HasOne("HotelApp_ASP.NET.Data.Models.RoomEntity", "Room")
+                    b.HasOne("HotelApp.Data.Models.RoomEntity", "Room")
                         .WithMany("Bookings")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -403,9 +406,9 @@ namespace HotelApp_ASP.NET.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("HotelApp_ASP.NET.Data.Models.RoomEntity", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.RoomEntity", b =>
                 {
-                    b.HasOne("HotelApp_ASP.NET.Data.Models.RoomTypeEntity", "RoomType")
+                    b.HasOne("HotelApp.Data.Models.RoomTypeEntity", "RoomType")
                         .WithMany("Rooms")
                         .HasForeignKey("RoomTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -414,12 +417,12 @@ namespace HotelApp_ASP.NET.Migrations
                     b.Navigation("RoomType");
                 });
 
-            modelBuilder.Entity("HotelApp_ASP.NET.Data.Models.RoomEntity", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.RoomEntity", b =>
                 {
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("HotelApp_ASP.NET.Data.Models.RoomTypeEntity", b =>
+            modelBuilder.Entity("HotelApp.Data.Models.RoomTypeEntity", b =>
                 {
                     b.Navigation("Rooms");
                 });

@@ -1,4 +1,5 @@
 ﻿using HotelApp.Corе.Contracts;
+using HotelApp.Corе.DataTransferObjects;
 using HotelApp.Data;
 using HotelApp.Data.Models;
 using HotelApp_ASP.NET.ValidationConstants;
@@ -40,11 +41,13 @@ namespace HotelApp.Corе.Services
 
         public bool CreateBooking(BookingFormModel model)
         {
-            bool roomIsExist = dbContext.Rooms.Any(r => r.Id == model.RoomId);
-            if (!roomIsExist)
+            var room = dbContext.Rooms.FirstOrDefault(r => r.Id == model.RoomId);
+            if (room == null)
             {
                 return false;
             }
+
+            var totalDays = (model.CheckOutDate - model.CheckInDate).Days;
 
             var newBooking = new BookingEntity()
             {
@@ -53,10 +56,12 @@ namespace HotelApp.Corе.Services
                 GuestPhone = model.GuestPhone,
                 RoomId = model.RoomId,
                 CheckInDate = model.CheckInDate,
-                CheckOutDate = model.CheckOutDate
+                CheckOutDate = model.CheckOutDate,
+                TotalPrice = totalDays * dbContext.Rooms.Where(r => r.Id == model.RoomId).Select(r => r.PricePerNight).FirstOrDefault(),
             };
 
             dbContext.Bookings.Add(newBooking);
+            room.IsAvailable = false;
             dbContext.SaveChanges();
 
             return true;
@@ -83,30 +88,66 @@ namespace HotelApp.Corе.Services
             return details;
         }
 
-        public IEnumerable<DropdownRoomType> allRoomTypes()
-        {
-            var allRoomTypes = dbContext.RoomTypes
-                .Select(alt => new DropdownRoomType()
-                {
-                    Id = alt.Id,
-                    Name = alt.Name,
-                })
-                .OrderBy(t => t.Name)
-                .ToArray();
-
-            return allRoomTypes;
-        }
-
         public BookingFormModel CreateFormModel()
         {
             var addBokingform = new BookingFormModel()
             {
                 CheckInDate = DateTime.Today,
                 CheckOutDate = DateTime.Today.AddDays(1),
-                RoomType = allRoomTypes()
+                Rooms = availableRooms()
             };
 
             return addBokingform;
         }
+
+        public IEnumerable<AvailableRoomsDropdown> availableRooms()
+        {
+            var roomsList = dbContext.Rooms
+                .Include(r => r.RoomType)
+                .Where(r => r.IsAvailable)
+                .Select(r => new AvailableRoomsDropdown
+                {
+                    Id = r.Id,
+                    RoomType = r.RoomType.Name
+                })
+                .ToList();
+
+            return roomsList;
+        }
+
+        public bool DeleteBooking(int id)
+        {
+            var deleteBooking = dbContext.Bookings.Find(id);
+            if (deleteBooking == null)
+            {
+                return false;
+            }
+
+            var room = dbContext.Rooms.Find(deleteBooking.RoomId);
+            if (room != null) 
+            {
+                room.IsAvailable = true;
+            }
+
+            dbContext.Bookings.Remove(deleteBooking);
+            dbContext.SaveChanges();
+            return true;
+        }
+
+
+
+        //public IEnumerable<DropdownRoomType> allRoomTypes()
+        //{
+        //    var allRoomTypes = dbContext.RoomTypes
+        //        .Select(alt => new DropdownRoomType()
+        //        {
+        //            Id = alt.Id,
+        //            Name = alt.Name,
+        //        })
+        //        .OrderBy(t => t.Name)
+        //        .ToArray();
+
+        //    return allRoomTypes;
+        //}
     }
 }
