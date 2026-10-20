@@ -8,6 +8,7 @@ namespace HotelApp_ASP.NET.ViewModels.RoomsModels
         public int Floor {  get; set; }
         public decimal PricePerNight { get; set; }
         public bool IsAvailable { get; set; }
+        public int RoomTypeId { get; set; }
         public IEnumerable<RoomTypeEntity> RoomTypes { get; set; } = new List<RoomTypeEntity>();
     }
 }

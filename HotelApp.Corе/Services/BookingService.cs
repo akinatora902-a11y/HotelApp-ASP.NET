@@ -2,15 +2,9 @@
 using HotelApp.Corе.DataTransferObjects;
 using HotelApp.Data;
 using HotelApp.Data.Models;
-using HotelApp_ASP.NET.ValidationConstants;
-using HotelApp_ASP.NET.ViewModels;
+using static HotelApp.Common.ValidationConstants.AppValidation;
 using HotelApp_ASP.NET.ViewModels.BookingsModels;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelApp.Corе.Services
 {
@@ -28,12 +22,12 @@ namespace HotelApp.Corе.Services
                    GuestName = b.GuestName,
                    GuestEmail = b.GuestEmail,
                    GuestPhone = b.GuestPhone,
-                   CheckInDate = b.CheckInDate.ToString(AppValidation.DateTime),
-                   CheckOutDate = b.CheckOutDate.ToString(AppValidation.DateTime),
+                   CheckInDate = b.CheckInDate.ToString(DateFormat),
+                   CheckOutDate = b.CheckOutDate.ToString(DateFormat),
                    TotalPrice = b.TotalPrice,
                    RoomNumber = b.Room.RoomNumber,
                })
-               .Take(AppValidation.EntityPerPages)
+               .Take(EntityPerPages)
                .ToArray();
 
             return allBookings;
@@ -57,7 +51,11 @@ namespace HotelApp.Corе.Services
                 RoomId = model.RoomId,
                 CheckInDate = model.CheckInDate,
                 CheckOutDate = model.CheckOutDate,
-                TotalPrice = totalDays * dbContext.Rooms.Where(r => r.Id == model.RoomId).Select(r => r.PricePerNight).FirstOrDefault(),
+                TotalPrice = totalDays * dbContext
+                                        .Rooms
+                                        .Where(r => r.Id == model.RoomId)
+                                        .Select(r => r.PricePerNight)
+                                        .FirstOrDefault(),
             };
 
             dbContext.Bookings.Add(newBooking);
@@ -77,8 +75,8 @@ namespace HotelApp.Corе.Services
                     GuestName = d.GuestName,
                     GuestEmail = d.GuestEmail,
                     GuestPhone = d.GuestPhone,
-                    CheckInDate = d.CheckInDate.ToString(AppValidation.DateTime),
-                    CheckOutDate = d.CheckOutDate.ToString(AppValidation.DateTime),
+                    CheckInDate = d.CheckInDate.ToString(DateFormat),
+                    CheckOutDate = d.CheckOutDate.ToString(DateFormat),
                     TotalPrice = d.TotalPrice,
                     RoomNumber = d.Room.RoomNumber,
                     RoomTypeName = d.Room.RoomType.Name

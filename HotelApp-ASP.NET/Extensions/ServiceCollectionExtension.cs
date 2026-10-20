@@ -11,9 +11,11 @@ namespace HotelApp_ASP.NET.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IRoomService, RoomService>();
 
             return services;
         }
+
 
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
         {

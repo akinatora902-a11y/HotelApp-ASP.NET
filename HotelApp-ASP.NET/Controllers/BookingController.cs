@@ -1,11 +1,6 @@
 ﻿using HotelApp.Corе.Contracts;
-using HotelApp.Data;
-using HotelApp.Data.Models;
-using HotelApp_ASP.NET.ValidationConstants;
-using HotelApp_ASP.NET.ViewModels;
 using HotelApp_ASP.NET.ViewModels.BookingsModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HotelApp_ASP.NET.Controllers
 {
