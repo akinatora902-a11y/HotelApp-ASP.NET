@@ -1,3 +1,5 @@
+using HotelApp.Common.Contract;
+using HotelApp.Common.Service;
 using HotelApp.Corе.Contracts;
 using HotelApp.Corе.Services;
 using HotelApp.Data;
@@ -11,6 +13,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplicationDbContext(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddScoped<IValidationService, ValidationService>();
 
 var app = builder.Build();
 

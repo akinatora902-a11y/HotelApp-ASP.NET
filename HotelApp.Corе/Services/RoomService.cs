@@ -1,4 +1,5 @@
-﻿using HotelApp.Corе.Contracts;
+﻿using HotelApp.Common.Contract;
+using HotelApp.Corе.Contracts;
 using HotelApp.Data;
 using HotelApp.Data.Models;
 using HotelApp_ASP.NET.ViewModels.RoomsModels;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static HotelApp.Common.ValidationConstants.AppValidation;
 namespace HotelApp.Corе.Services
 {
-    public class RoomService(HotelDbContext dbContext) : IRoomService
+    public class RoomService(HotelDbContext dbContext, IValidationService validationService) : IRoomService
     {
         public IEnumerable<RoomIndexViewModel> AllRoom()
         {
@@ -24,12 +25,27 @@ namespace HotelApp.Corе.Services
                 .Take(EntityPerPages)
                 .ToArray();
 
+            if (!validationService.HasAny(roomList))
+            {
+                return Enumerable.Empty<RoomIndexViewModel>();
+            }
+
             return roomList;
         }
 
         public bool EditRoom(int id, RoomFormModel editModel)
         {
+            if (!validationService.IsValidId(id))
+            {
+                return false;
+            }
+
             var roomToEdit = dbContext.Rooms.Find(id);
+
+            if (!validationService.Exists(roomToEdit))
+            {
+                return false;
+            }
 
             roomToEdit.RoomNumber = editModel.RoomNumber;
             roomToEdit.Floor = editModel.Floor;
@@ -44,6 +60,11 @@ namespace HotelApp.Corе.Services
 
         public RoomDetailsViewModel GetRoomDetails(int id)
         {
+            if (!validationService.IsValidId(id))
+            {
+                return null;
+            }
+
             var roomDetails = dbContext.Rooms
                 .Where(r => r.Id == id)
                 .Select(r => new RoomDetailsViewModel
@@ -55,16 +76,30 @@ namespace HotelApp.Corе.Services
                     RoomTypeName = r.RoomType.Name,
                     Description = r.RoomType.Description,
                     Capacity = r.RoomType.Capacity
-
                 })
                 .FirstOrDefault();
+
+            if (!validationService.Exists(roomDetails))
+            {
+                return null;
+            }
 
             return roomDetails;
         }
 
         public RoomFormModel GetRoomForEdit(int id)
         {
+            if (!validationService.IsValidId(id))
+            {
+                return null;
+            }
+
             var roomToEdit = dbContext.Rooms.Find(id);
+
+            if (!validationService.Exists(roomToEdit))
+            {
+                return null;
+            }
 
             return new RoomFormModel()
             {
@@ -74,13 +109,13 @@ namespace HotelApp.Corе.Services
                 IsAvailable = roomToEdit.IsAvailable,
                 RoomTypeId = roomToEdit.RoomTypeId,
                 RoomTypes = dbContext.RoomTypes
-            .Select(rt => new RoomTypeEntity()
-            {
-                Id = rt.Id,
-                Name = rt.Name
-            })
-            .ToList()
+                    .Select(rt => new RoomTypeEntity()
+                    {
+                        Id = rt.Id,
+                        Name = rt.Name
+                    })
+                    .ToList()
             };
         }
     }
-}
+ }

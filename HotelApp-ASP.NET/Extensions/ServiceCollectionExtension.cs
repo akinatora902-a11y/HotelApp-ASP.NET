@@ -2,6 +2,8 @@
 using HotelApp.Data;
 using Microsoft.EntityFrameworkCore;
 using HotelApp.Corе.Services;
+using HotelApp.Common.Contract;
+using HotelApp.Common.Service;
 
 
 namespace HotelApp_ASP.NET.Extensions
@@ -12,6 +14,7 @@ namespace HotelApp_ASP.NET.Extensions
         {
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IValidationService, ValidationService>();
 
             return services;
         }

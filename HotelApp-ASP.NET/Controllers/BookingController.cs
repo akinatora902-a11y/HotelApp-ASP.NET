@@ -62,7 +62,7 @@ namespace HotelApp_ASP.NET.Controllers
             return View(model);
         }
 
-        [HttpDelete]
+        [HttpPost]
         public IActionResult DeleteConfirmed(int id)
         {
             bool delete = bookingService.DeleteBooking(id);

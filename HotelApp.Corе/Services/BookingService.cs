@@ -1,14 +1,15 @@
-﻿using HotelApp.Corе.Contracts;
+﻿using HotelApp.Common.Contract;
+using HotelApp.Corе.Contracts;
 using HotelApp.Corе.DataTransferObjects;
 using HotelApp.Data;
 using HotelApp.Data.Models;
-using static HotelApp.Common.ValidationConstants.AppValidation;
 using HotelApp_ASP.NET.ViewModels.BookingsModels;
 using Microsoft.EntityFrameworkCore;
+using static HotelApp.Common.ValidationConstants.AppValidation;
 
 namespace HotelApp.Corе.Services
 {
-    public class BookingService(HotelDbContext dbContext) : IBookingService
+    public class BookingService(HotelDbContext dbContext, IValidationService validationService) : IBookingService
     {
         public IEnumerable<BookingIndexViewModel> AllBooking()
         {
@@ -30,18 +31,27 @@ namespace HotelApp.Corе.Services
                .Take(EntityPerPages)
                .ToArray();
 
+            if (!validationService.HasAny(allBookings))
+            {
+                return Enumerable.Empty<BookingIndexViewModel>();
+            }
+
             return allBookings;
         }
 
         public bool CreateBooking(BookingFormModel model)
         {
             var room = dbContext.Rooms.FirstOrDefault(r => r.Id == model.RoomId);
-            if (room == null)
+            if (!validationService.Exists(room))
             {
                 return false;
             }
 
             var totalDays = (model.CheckOutDate - model.CheckInDate).Days;
+            var roomPrice = dbContext.Rooms
+                .Where(r => r.Id == model.RoomId)
+                .Select(r => r.PricePerNight)
+                .FirstOrDefault();
 
             var newBooking = new BookingEntity()
             {
@@ -51,11 +61,7 @@ namespace HotelApp.Corе.Services
                 RoomId = model.RoomId,
                 CheckInDate = model.CheckInDate,
                 CheckOutDate = model.CheckOutDate,
-                TotalPrice = totalDays * dbContext
-                                        .Rooms
-                                        .Where(r => r.Id == model.RoomId)
-                                        .Select(r => r.PricePerNight)
-                                        .FirstOrDefault(),
+                TotalPrice = totalDays * roomPrice
             };
 
             dbContext.Bookings.Add(newBooking);
@@ -67,6 +73,11 @@ namespace HotelApp.Corе.Services
 
         public BookingDetailsViewModel Detail(int id)
         {
+            if (!validationService.IsValidId(id))
+            {
+                return null;
+            }
+
             var details = dbContext.Bookings
                 .Where(b => b.Id == id)
                 .Select(d => new BookingDetailsViewModel()
@@ -83,19 +94,24 @@ namespace HotelApp.Corе.Services
                 })
                 .FirstOrDefault();
 
+            if (!validationService.Exists(details))
+            {
+                return null;
+            }
+
             return details;
         }
 
         public BookingFormModel CreateFormModel()
         {
-            var addBokingform = new BookingFormModel()
+            var addBookingForm = new BookingFormModel()
             {
                 CheckInDate = DateTime.Today,
                 CheckOutDate = DateTime.Today.AddDays(1),
                 Rooms = availableRooms()
             };
 
-            return addBokingform;
+            return addBookingForm;
         }
 
         public IEnumerable<AvailableRoomsDropdown> availableRooms()
@@ -110,25 +126,36 @@ namespace HotelApp.Corе.Services
                 })
                 .ToList();
 
+            if (!validationService.HasAny(roomsList))
+            {
+                return Enumerable.Empty<AvailableRoomsDropdown>();
+            }
+
             return roomsList;
         }
 
         public bool DeleteBooking(int id)
         {
+            if (!validationService.IsValidId(id))
+            {
+                return false;
+            }
+
             var deleteBooking = dbContext.Bookings.Find(id);
-            if (deleteBooking == null)
+            if (!validationService.Exists(deleteBooking))
             {
                 return false;
             }
 
             var room = dbContext.Rooms.Find(deleteBooking.RoomId);
-            if (room != null) 
+            if (validationService.Exists(room))
             {
                 room.IsAvailable = true;
             }
 
             dbContext.Bookings.Remove(deleteBooking);
             dbContext.SaveChanges();
+
             return true;
         }
 
