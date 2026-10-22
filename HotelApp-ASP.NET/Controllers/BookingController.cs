@@ -8,39 +8,39 @@ namespace HotelApp_ASP.NET.Controllers
     {
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var allBookings = bookingService.AllBooking();
+            var allBookings = await bookingService.AllBookingAsync();
 
             return View(allBookings);
         }
 
         [HttpGet]
-        public IActionResult Details (int Id)
+        public async Task<IActionResult> Details (int Id)
         {
 
-            var details = bookingService.Detail(Id);
+            var details = await bookingService.DetailAsync(Id);
 
             return View(details);
         }
         
         [HttpGet] 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var addBokingform = bookingService.CreateFormModel();
+            var addBokingform = await bookingService.CreateFormModelAsync();
 
             return View(addBokingform);
         }
 
         [HttpPost]
-        public IActionResult Create (BookingFormModel model)
+        public async Task<IActionResult> Create (BookingFormModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            bool isCreated = bookingService.CreateBooking(model);
+            bool isCreated = await bookingService.CreateBookingAsync(model);
 
             if (!isCreated)
             {
@@ -50,9 +50,9 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var model = bookingService.Detail(id);
+            var model = await bookingService.DetailAsync(id);
 
             if (model == null)
             {
@@ -63,9 +63,9 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            bool delete = bookingService.DeleteBooking(id);
+            bool delete = await bookingService.DeleteBookingAsync(id);
 
             if (!delete)
             {

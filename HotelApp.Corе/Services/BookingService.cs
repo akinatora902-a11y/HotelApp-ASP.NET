@@ -1,4 +1,4 @@
-﻿using HotelApp.Common.Contract;
+﻿ using HotelApp.Common.Contract;
 using HotelApp.Corе.Contracts;
 using HotelApp.Corе.DataTransferObjects;
 using HotelApp.Data;

@@ -13,7 +13,6 @@
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
     @if (Model != null && Model.Any())
-    {
         @foreach (var room in Model)
         {
             <div class="col">
@@ -26,7 +25,7 @@
                             </span>
                         </div>
                         <h6 class="card-subtitle mb-3 text-muted">Type: @room.RoomTypeName</h6>
-                        
+                    
                         <p class="card-text mb-1">
                             <strong>Floor:</strong> @room.Floor
                         </p>
@@ -38,14 +37,20 @@
                         <a asp-action="Details" asp-route-id="@room.Id" class="btn btn-outline-info btn-sm">
                             <i class="bi bi-info-circle"></i> Details
                         </a>
-                        <a asp-action="Edit" asp-route-id="@room.Id" class="btn btn-outline-warning btn-sm">
-                            <i class="bi bi-pencil"></i> Edit
-                        </a>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@room.Id" class="btn btn-outline-warning btn-sm me-1">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <!-- Бутон, който отваря модалния прозорец -->
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                    data-room-id="@room.Id" data-room-number="@room.RoomNumber">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         }
-    }
     else
     {
         <div class="col-12 text-center my-5">
@@ -55,3 +60,40 @@
         </div>
     }
 </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="DeleteConfirmed" method="post">
+                <input type="hidden" name="id" id="modalRoomId" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete room <strong id="modalRoomNumber"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var roomId = button.getAttribute('data-room-id');
+            var roomNumber = button.getAttribute('data-room-number');
+
+            var modalRoomIdInput = deleteModal.querySelector('#modalRoomId');
+            var modalRoomNumberSpan = deleteModal.querySelector('#modalRoomNumber');
+
+            modalRoomIdInput.value = roomId;
+            modalRoomNumberSpan.textContent = roomNumber;
+        });
+    </script>
+}

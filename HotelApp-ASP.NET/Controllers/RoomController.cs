@@ -8,33 +8,33 @@ namespace HotelApp_ASP.NET.Controllers
     public class RoomController(IRoomService roomService) : Controller
     {
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var AllRoom = roomService.AllRoom();
+            var AllRoom = await roomService.AllRoomAsync();
 
             return View(AllRoom);
         }
 
         [HttpGet]
-        public IActionResult Details(int id) 
+        public async Task<IActionResult> Details(int id) 
         {
-            var detailsForRoom = roomService.GetRoomDetails(id);
+            var detailsForRoom = await roomService.GetRoomDetailsAsync(id);
 
             return View(detailsForRoom);
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var roomModel = roomService.GetRoomForEdit(id);
+            var roomModel = await roomService.GetRoomDetailsAsync(id);
 
             return View(roomModel);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, RoomFormModel model)
+        public async Task<IActionResult> Edit(int id, RoomFormModel model)
         {
-            bool result = roomService.EditRoom(id, model);
+            var result = await roomService.EditRoomAsync(id, model);
 
             return RedirectToAction("Index", "Room");
         }
