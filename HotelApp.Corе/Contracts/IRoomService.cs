@@ -9,12 +9,9 @@ namespace HotelApp.Corе.Contracts
 {
     public interface IRoomService
     {
-        public IEnumerable<RoomIndexViewModel> AllRoom();
-
-        public RoomDetailsViewModel GetRoomDetails(int id);
-
-        public RoomFormModel GetRoomForEdit(int id);
-
-        public bool EditRoom(int id, RoomFormModel editModel);
+        Task<IEnumerable<RoomIndexViewModel>> AllRoomAsync();
+        Task<RoomDetailsViewModel> GetRoomDetailsAsync(int id);
+        Task<RoomFormModel> GetRoomForEditAsync(int id);
+        Task<bool> EditRoomAsync(int id, RoomFormModel editModel);
     }
 }

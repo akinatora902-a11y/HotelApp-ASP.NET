@@ -5,11 +5,11 @@ namespace HotelApp.Corе.Contracts
 {
     public interface IBookingService
     {
-        IEnumerable<BookingIndexViewModel> AllBooking();
-        BookingDetailsViewModel Detail(int id);
-        BookingFormModel CreateFormModel ();
-        bool CreateBooking(BookingFormModel model);
-        public IEnumerable<AvailableRoomsDropdown> availableRooms();
-        bool DeleteBooking (int id);
+        Task<IEnumerable<BookingIndexViewModel>> AllBookingAsync();
+        Task<BookingDetailsViewModel> DetailAsync(int id);
+        Task<BookingFormModel> CreateFormModelAsync();
+        Task<bool> CreateBookingAsync(BookingFormModel model);
+        Task<IEnumerable<AvailableRoomsDropdown>> AvailableRoomsAsync();
+        Task<bool> DeleteBookingAsync(int id);
     }
 }

@@ -3,15 +3,16 @@ using HotelApp.Corе.Contracts;
 using HotelApp.Data;
 using HotelApp.Data.Models;
 using HotelApp_ASP.NET.ViewModels.RoomsModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static HotelApp.Common.ValidationConstants.AppValidation;
 namespace HotelApp.Corе.Services
 {
     public class RoomService(HotelDbContext dbContext, IValidationService validationService) : IRoomService
     {
-        public IEnumerable<RoomIndexViewModel> AllRoom()
+        public async Task<IEnumerable<RoomIndexViewModel>> AllRoomAsync()
         {
-            var roomList = dbContext.Rooms
+            var roomList = await dbContext.Rooms
                 .OrderBy(r => r.Id)
                 .Select(r => new RoomIndexViewModel
                 {
@@ -23,26 +24,25 @@ namespace HotelApp.Corе.Services
                     IsAvailable = r.IsAvailable,
                 })
                 .Take(EntityPerPages)
-                .ToArray();
+                .ToArrayAsync();
 
-            if (!validationService.HasAny(roomList))
+            if (!await validationService.HasAnyAsync(roomList))
             {
                 return Enumerable.Empty<RoomIndexViewModel>();
             }
 
             return roomList;
         }
-
-        public bool EditRoom(int id, RoomFormModel editModel)
+        public async Task<bool> EditRoomAsync(int id, RoomFormModel editModel)
         {
-            if (!validationService.IsValidId(id))
+            if (!await validationService.IsValidIdAsync(id))
             {
                 return false;
             }
 
-            var roomToEdit = dbContext.Rooms.Find(id);
+            var roomToEdit = await dbContext.Rooms.FindAsync(id);
 
-            if (!validationService.Exists(roomToEdit))
+            if (!await validationService.ExistsAsync(roomToEdit))
             {
                 return false;
             }
@@ -53,19 +53,18 @@ namespace HotelApp.Corе.Services
             roomToEdit.IsAvailable = editModel.IsAvailable;
             roomToEdit.RoomTypeId = editModel.RoomTypeId;
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
-
-        public RoomDetailsViewModel GetRoomDetails(int id)
+        public async Task<RoomDetailsViewModel> GetRoomDetailsAsync(int id)
         {
-            if (!validationService.IsValidId(id))
+            if (!await validationService.IsValidIdAsync(id))
             {
                 return null;
             }
 
-            var roomDetails = dbContext.Rooms
+            var roomDetails = await dbContext.Rooms
                 .Where(r => r.Id == id)
                 .Select(r => new RoomDetailsViewModel
                 {
@@ -77,26 +76,25 @@ namespace HotelApp.Corе.Services
                     Description = r.RoomType.Description,
                     Capacity = r.RoomType.Capacity
                 })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
-            if (!validationService.Exists(roomDetails))
+            if (!await validationService.ExistsAsync(roomDetails))
             {
                 return null;
             }
 
             return roomDetails;
         }
-
-        public RoomFormModel GetRoomForEdit(int id)
+        public async Task<RoomFormModel> GetRoomForEditAsync(int id)
         {
-            if (!validationService.IsValidId(id))
+            if (!await validationService.IsValidIdAsync(id))
             {
                 return null;
             }
 
-            var roomToEdit = dbContext.Rooms.Find(id);
+            var roomToEdit = await dbContext.Rooms.FindAsync(id);
 
-            if (!validationService.Exists(roomToEdit))
+            if (!await validationService.ExistsAsync(roomToEdit))
             {
                 return null;
             }
@@ -108,14 +106,15 @@ namespace HotelApp.Corе.Services
                 PricePerNight = roomToEdit.PricePerNight,
                 IsAvailable = roomToEdit.IsAvailable,
                 RoomTypeId = roomToEdit.RoomTypeId,
-                RoomTypes = dbContext.RoomTypes
+                RoomTypes = await dbContext.RoomTypes
                     .Select(rt => new RoomTypeEntity()
                     {
                         Id = rt.Id,
                         Name = rt.Name
                     })
-                    .ToList()
+                    .ToListAsync()
             };
         }
     }
- }
+}
+

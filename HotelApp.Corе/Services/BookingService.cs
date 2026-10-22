@@ -11,9 +11,9 @@ namespace HotelApp.Corе.Services
 {
     public class BookingService(HotelDbContext dbContext, IValidationService validationService) : IBookingService
     {
-        public IEnumerable<BookingIndexViewModel> AllBooking()
+        public async Task<IEnumerable<BookingIndexViewModel>> AllBookingAsync()
         {
-            var allBookings = dbContext.Bookings
+            var allBookings = await dbContext.Bookings
                .OrderBy(b => b.Id)
                .ThenBy(b => b.RoomId)
                .Include(r => r.Room)
@@ -29,9 +29,9 @@ namespace HotelApp.Corе.Services
                    RoomNumber = b.Room.RoomNumber,
                })
                .Take(EntityPerPages)
-               .ToArray();
+               .ToArrayAsync();
 
-            if (!validationService.HasAny(allBookings))
+            if (!await validationService.HasAnyAsync(allBookings))
             {
                 return Enumerable.Empty<BookingIndexViewModel>();
             }
@@ -39,19 +39,19 @@ namespace HotelApp.Corе.Services
             return allBookings;
         }
 
-        public bool CreateBooking(BookingFormModel model)
+        public async Task<bool> CreateBookingAsync(BookingFormModel model)
         {
-            var room = dbContext.Rooms.FirstOrDefault(r => r.Id == model.RoomId);
-            if (!validationService.Exists(room))
+            var room = await dbContext.Rooms.FirstOrDefaultAsync(r => r.Id == model.RoomId);
+            if (!await validationService.ExistsAsync(room))
             {
                 return false;
             }
 
             var totalDays = (model.CheckOutDate - model.CheckInDate).Days;
-            var roomPrice = dbContext.Rooms
+            var roomPrice = await dbContext.Rooms
                 .Where(r => r.Id == model.RoomId)
                 .Select(r => r.PricePerNight)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
             var newBooking = new BookingEntity()
             {
@@ -61,24 +61,25 @@ namespace HotelApp.Corе.Services
                 RoomId = model.RoomId,
                 CheckInDate = model.CheckInDate,
                 CheckOutDate = model.CheckOutDate,
-                TotalPrice = totalDays * roomPrice
+                TotalPrice = totalDays * roomPrice 
+
             };
 
             dbContext.Bookings.Add(newBooking);
             room.IsAvailable = false;
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }
 
-        public BookingDetailsViewModel Detail(int id)
+        public async Task<BookingDetailsViewModel> DetailAsync(int id)
         {
-            if (!validationService.IsValidId(id))
+            if (!await validationService.IsValidIdAsync(id))
             {
                 return null;
             }
 
-            var details = dbContext.Bookings
+            var details = await dbContext.Bookings
                 .Where(b => b.Id == id)
                 .Select(d => new BookingDetailsViewModel()
                 {
@@ -92,9 +93,9 @@ namespace HotelApp.Corе.Services
                     RoomNumber = d.Room.RoomNumber,
                     RoomTypeName = d.Room.RoomType.Name
                 })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
-            if (!validationService.Exists(details))
+            if (!await validationService.ExistsAsync(details))
             {
                 return null;
             }
@@ -102,21 +103,21 @@ namespace HotelApp.Corе.Services
             return details;
         }
 
-        public BookingFormModel CreateFormModel()
+        public async Task<BookingFormModel> CreateFormModelAsync()
         {
             var addBookingForm = new BookingFormModel()
             {
                 CheckInDate = DateTime.Today,
                 CheckOutDate = DateTime.Today.AddDays(1),
-                Rooms = availableRooms()
+                Rooms = await AvailableRoomsAsync()
             };
 
             return addBookingForm;
         }
 
-        public IEnumerable<AvailableRoomsDropdown> availableRooms()
+        public async Task<IEnumerable<AvailableRoomsDropdown>> AvailableRoomsAsync()
         {
-            var roomsList = dbContext.Rooms
+            var roomsList = await dbContext.Rooms
                 .Include(r => r.RoomType)
                 .Where(r => r.IsAvailable)
                 .Select(r => new AvailableRoomsDropdown
@@ -124,9 +125,9 @@ namespace HotelApp.Corе.Services
                     Id = r.Id,
                     RoomType = r.RoomType.Name
                 })
-                .ToList();
+                .ToListAsync();
 
-            if (!validationService.HasAny(roomsList))
+            if (!await validationService.HasAnyAsync(roomsList))
             {
                 return Enumerable.Empty<AvailableRoomsDropdown>();
             }
@@ -134,27 +135,27 @@ namespace HotelApp.Corе.Services
             return roomsList;
         }
 
-        public bool DeleteBooking(int id)
+        public async Task<bool> DeleteBookingAsync(int id)
         {
-            if (!validationService.IsValidId(id))
+            if (!await validationService.IsValidIdAsync(id))
             {
                 return false;
             }
 
-            var deleteBooking = dbContext.Bookings.Find(id);
-            if (!validationService.Exists(deleteBooking))
+            var deleteBooking = await dbContext.Bookings.FindAsync(id);
+            if (!await validationService.ExistsAsync(deleteBooking))
             {
                 return false;
             }
 
-            var room = dbContext.Rooms.Find(deleteBooking.RoomId);
-            if (validationService.Exists(room))
+            var room = await dbContext.Rooms.FindAsync(deleteBooking.RoomId);
+            if (await validationService.ExistsAsync(room))
             {
                 room.IsAvailable = true;
             }
 
             dbContext.Bookings.Remove(deleteBooking);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
             return true;
         }

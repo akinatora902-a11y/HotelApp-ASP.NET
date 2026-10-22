@@ -8,12 +8,12 @@ namespace HotelApp.Common.Contract
 {
     public interface IValidationService 
     {
-        public bool IsValidId(int id);
+        public Task<bool> IsValidIdAsync(int id);
 
-        public bool Exists<T>(T? entity) where T : class;
+        public Task<bool> ExistsAsync<T>(T? entity) where T : class;
 
-        public bool HasAny<T>(IEnumerable<T>? collection);
+        public Task<bool> HasAnyAsync<T>(IEnumerable<T>? collection);
 
-        public bool IsNotNullOrWhiteSpace(string? value);
+        public Task<bool> IsNotNullOrWhiteSpaceAsync(string? value);
     }
 }

@@ -9,24 +9,24 @@ namespace HotelApp.Common.Service
 {
     public class ValidationService : IValidationService
     {
-        public bool IsValidId(int id)
+        public Task<bool> IsValidIdAsync(int id)
         {
-            return id > 0;
+            return Task.FromResult(id > 0);
         }
 
-        public bool Exists<T>(T? entity) where T : class
+        public Task<bool> ExistsAsync<T>(T? entity) where T : class
         {
-            return entity != null;
+            return Task.FromResult(entity != null);
         }
 
-        public bool HasAny<T>(IEnumerable<T>? collection)
+        public Task<bool> HasAnyAsync<T>(IEnumerable<T>? collection)
         {
-            return collection != null && collection.Any();
+            return Task.FromResult(collection != null && collection.Any());
         }
 
-        public bool IsNotNullOrWhiteSpace(string? value)
+        public Task<bool> IsNotNullOrWhiteSpaceAsync(string? value)
         {
-            return !string.IsNullOrWhiteSpace(value);
+            return Task.FromResult(!string.IsNullOrWhiteSpace(value));
         }
     }
 }
