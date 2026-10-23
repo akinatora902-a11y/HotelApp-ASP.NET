@@ -18,6 +18,9 @@ namespace HotelApp.Data.Models
         [StringLength(RoomTypeDescriptionMaxLength)]
         public string? Description { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal PricePerNight { get; set; }
+
         public virtual ICollection<RoomEntity> Rooms { get; set; } = new HashSet<RoomEntity>();
     }
 }

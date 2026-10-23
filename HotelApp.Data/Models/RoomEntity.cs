@@ -17,9 +17,6 @@ namespace HotelApp.Data.Models
         [Range(FloorMinValue, FloorMaxValue)]
         public int Floor { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal PricePerNight { get; set; }
-
         [Required]
         public bool IsAvailable { get; set; }
         public int RoomTypeId { get; set; }

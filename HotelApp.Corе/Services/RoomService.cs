@@ -20,7 +20,7 @@ namespace HotelApp.Corе.Services
                     RoomNumber = r.RoomNumber,
                     RoomTypeName = r.RoomType.Name,
                     Floor = r.Floor,
-                    PricePerNight = r.PricePerNight,
+                    PricePerNight = r.RoomType.PricePerNight,
                     IsAvailable = r.IsAvailable,
                 })
                 .Take(EntityPerPages)
@@ -49,7 +49,7 @@ namespace HotelApp.Corе.Services
 
             roomToEdit.RoomNumber = editModel.RoomNumber;
             roomToEdit.Floor = editModel.Floor;
-            roomToEdit.PricePerNight = editModel.PricePerNight;
+            roomToEdit.RoomType.PricePerNight = editModel.PricePerNight;
             roomToEdit.IsAvailable = editModel.IsAvailable;
             roomToEdit.RoomTypeId = editModel.RoomTypeId;
 
@@ -70,7 +70,7 @@ namespace HotelApp.Corе.Services
                 {
                     RoomNumber = r.RoomNumber,
                     Floor = r.Floor,
-                    PricePerNight = r.PricePerNight,
+                    PricePerNight = r.RoomType.PricePerNight,
                     IsAvailable = r.IsAvailable,
                     RoomTypeName = r.RoomType.Name,
                     Description = r.RoomType.Description,
@@ -103,7 +103,7 @@ namespace HotelApp.Corе.Services
             {
                 RoomNumber = roomToEdit.RoomNumber,
                 Floor = roomToEdit.Floor,
-                PricePerNight = roomToEdit.PricePerNight,
+                PricePerNight = roomToEdit.RoomType.PricePerNight,
                 IsAvailable = roomToEdit.IsAvailable,
                 RoomTypeId = roomToEdit.RoomTypeId,
                 RoomTypes = await dbContext.RoomTypes

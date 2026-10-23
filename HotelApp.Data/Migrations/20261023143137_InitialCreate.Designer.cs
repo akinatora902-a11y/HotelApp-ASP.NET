@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HotelApp_ASP.NET.Migrations
+namespace HotelApp.Data.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    [Migration("20261017131750_RemovePriceFromRoomType")]
-    partial class RemovePriceFromRoomType
+    [Migration("20261023143137_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -193,9 +193,6 @@ namespace HotelApp_ASP.NET.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("PricePerNight")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("RoomNumber")
                         .HasColumnType("int");
 
@@ -214,7 +211,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 1,
                             Floor = 1,
                             IsAvailable = true,
-                            PricePerNight = 60.00m,
                             RoomNumber = 101,
                             RoomTypeId = 1
                         },
@@ -223,7 +219,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 2,
                             Floor = 1,
                             IsAvailable = true,
-                            PricePerNight = 90.00m,
                             RoomNumber = 102,
                             RoomTypeId = 2
                         },
@@ -232,7 +227,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 3,
                             Floor = 1,
                             IsAvailable = false,
-                            PricePerNight = 95.00m,
                             RoomNumber = 103,
                             RoomTypeId = 3
                         },
@@ -241,7 +235,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 4,
                             Floor = 2,
                             IsAvailable = true,
-                            PricePerNight = 130.00m,
                             RoomNumber = 201,
                             RoomTypeId = 4
                         },
@@ -250,7 +243,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 5,
                             Floor = 2,
                             IsAvailable = true,
-                            PricePerNight = 140.00m,
                             RoomNumber = 202,
                             RoomTypeId = 5
                         },
@@ -259,7 +251,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 6,
                             Floor = 2,
                             IsAvailable = false,
-                            PricePerNight = 200.00m,
                             RoomNumber = 203,
                             RoomTypeId = 6
                         },
@@ -268,7 +259,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 7,
                             Floor = 3,
                             IsAvailable = true,
-                            PricePerNight = 180.00m,
                             RoomNumber = 301,
                             RoomTypeId = 7
                         },
@@ -277,7 +267,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 8,
                             Floor = 3,
                             IsAvailable = true,
-                            PricePerNight = 250.00m,
                             RoomNumber = 302,
                             RoomTypeId = 8
                         },
@@ -286,7 +275,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 9,
                             Floor = 4,
                             IsAvailable = true,
-                            PricePerNight = 500.00m,
                             RoomNumber = 401,
                             RoomTypeId = 9
                         },
@@ -295,7 +283,6 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 10,
                             Floor = 1,
                             IsAvailable = true,
-                            PricePerNight = 85.00m,
                             RoomNumber = 104,
                             RoomTypeId = 10
                         });
@@ -321,6 +308,9 @@ namespace HotelApp_ASP.NET.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<decimal>("PricePerNight")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.ToTable("RoomTypes");
@@ -331,70 +321,80 @@ namespace HotelApp_ASP.NET.Migrations
                             Id = 1,
                             Capacity = 1,
                             Description = "Compact room for one guest featuring a single bed, workspace desk, and private bathroom.",
-                            Name = "Single Room"
+                            Name = "Single Room",
+                            PricePerNight = 60.00m
                         },
                         new
                         {
                             Id = 2,
                             Capacity = 2,
                             Description = "Cozy room with a queen-size bed, ideal for couples or solo travelers.",
-                            Name = "Double Standard"
+                            Name = "Double Standard",
+                            PricePerNight = 90.00m
                         },
                         new
                         {
                             Id = 3,
                             Capacity = 2,
                             Description = "Practical room with two separate single beds, suitable for friends or colleagues.",
-                            Name = "Twin Room"
+                            Name = "Twin Room",
+                            PricePerNight = 95.00m
                         },
                         new
                         {
                             Id = 4,
                             Capacity = 2,
                             Description = "Spacious room featuring a king-size bed, private balcony, and scenic view.",
-                            Name = "Deluxe Double"
+                            Name = "Deluxe Double",
+                            PricePerNight = 130.00m
                         },
                         new
                         {
                             Id = 5,
                             Capacity = 3,
                             Description = "Comfortable room equipped with three single beds or one double and one single bed.",
-                            Name = "Triple Room"
+                            Name = "Triple Room",
+                            PricePerNight = 140.00m
                         },
                         new
                         {
                             Id = 6,
                             Capacity = 4,
                             Description = "Large suite with two separate bedrooms, perfect for families traveling together.",
-                            Name = "Family Suite"
+                            Name = "Family Suite",
+                            PricePerNight = 200.00m
                         },
                         new
                         {
                             Id = 7,
                             Capacity = 3,
                             Description = "Elegant mini-suite featuring a sitting area, sofa, and upgraded bathroom amenities.",
-                            Name = "Junior Suite"
+                            Name = "Junior Suite",
+                            PricePerNight = 180.00m
                         },
                         new
                         {
                             Id = 8,
                             Capacity = 2,
                             Description = "Premium suite tailored for business travelers, including a workspace and lounge access.",
-                            Name = "Executive Suite"
+                            Name = "Executive Suite",
+                            PricePerNight = 250.00m
                         },
                         new
                         {
                             Id = 9,
                             Capacity = 4,
                             Description = "Top-floor luxury penthouse with panoramic views, private jacuzzi, and spacious terrace.",
-                            Name = "Presidential Penthouse"
+                            Name = "Presidential Penthouse",
+                            PricePerNight = 500.00m
                         },
                         new
                         {
                             Id = 10,
                             Capacity = 2,
                             Description = "Specially adapted room for guests with reduced mobility, featuring widened doorways and roll-in shower.",
-                            Name = "Accessible Room"
+                            Name = "Accessible Room",
+                            PricePerNight = 85.00m
                         });
                 });
 

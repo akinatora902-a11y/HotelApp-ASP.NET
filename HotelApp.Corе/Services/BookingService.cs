@@ -50,7 +50,7 @@ namespace HotelApp.Corе.Services
             var totalDays = (model.CheckOutDate - model.CheckInDate).Days;
             var roomPrice = await dbContext.Rooms
                 .Where(r => r.Id == model.RoomId)
-                .Select(r => r.PricePerNight)
+                .Select(r => r.RoomType.PricePerNight)
                 .FirstOrDefaultAsync();
 
             var newBooking = new BookingEntity()
