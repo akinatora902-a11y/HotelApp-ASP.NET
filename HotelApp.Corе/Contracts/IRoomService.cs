@@ -13,5 +13,8 @@ namespace HotelApp.Corе.Contracts
         Task<RoomDetailsViewModel> GetRoomDetailsAsync(int id);
         Task<RoomFormModel> GetRoomForEditAsync(int id);
         Task<bool> EditRoomAsync(int id, RoomFormModel editModel);
+        Task<RoomFormModel> CreateFormAsync();
+        Task<bool> CreateRoomAsync(RoomFormModel model);
+        Task<bool> DeleteRoomAsync(int id);
     }
 }

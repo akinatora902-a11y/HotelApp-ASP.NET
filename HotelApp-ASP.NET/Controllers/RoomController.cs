@@ -38,5 +38,47 @@ namespace HotelApp_ASP.NET.Controllers
 
             return RedirectToAction("Index", "Room");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            var roomCreateForm = await roomService.CreateFormAsync();
+
+            return View(roomCreateForm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(RoomFormModel model)
+        {
+            var newRoom = roomService.CreateRoomAsync(model);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var model = await roomService.GetRoomDetailsAsync(id); 
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            bool delete = await roomService.DeleteRoomAsync(id);
+
+            if (!delete)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

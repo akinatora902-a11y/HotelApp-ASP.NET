@@ -160,20 +160,5 @@ namespace HotelApp.Corе.Services
             return true;
         }
 
-
-
-        //public IEnumerable<DropdownRoomType> allRoomTypes()
-        //{
-        //    var allRoomTypes = dbContext.RoomTypes
-        //        .Select(alt => new DropdownRoomType()
-        //        {
-        //            Id = alt.Id,
-        //            Name = alt.Name,
-        //        })
-        //        .OrderBy(t => t.Name)
-        //        .ToArray();
-
-        //    return allRoomTypes;
-        //}
     }
 }

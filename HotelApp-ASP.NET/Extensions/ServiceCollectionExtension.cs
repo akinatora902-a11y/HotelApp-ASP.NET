@@ -15,6 +15,7 @@ namespace HotelApp_ASP.NET.Extensions
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IValidationService, ValidationService>();
+            services.AddScoped<ITypeService, TypeService>();
 
             return services;
         }

@@ -2,13 +2,14 @@
 using HotelApp.Corе.Contracts;
 using HotelApp.Data;
 using HotelApp.Data.Models;
+using HotelApp_ASP.NET.ViewModels;
 using HotelApp_ASP.NET.ViewModels.RoomsModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static HotelApp.Common.ValidationConstants.AppValidation;
 namespace HotelApp.Corе.Services
 {
-    public class RoomService(HotelDbContext dbContext, IValidationService validationService) : IRoomService
+    public class RoomService(HotelDbContext dbContext, IValidationService validationService, ITypeService typeService) : IRoomService
     {
         public async Task<IEnumerable<RoomIndexViewModel>> AllRoomAsync()
         {
@@ -32,6 +33,31 @@ namespace HotelApp.Corе.Services
             }
 
             return roomList;
+        }
+        public async Task<RoomFormModel> CreateFormAsync()
+        {
+            var room = new RoomFormModel()
+            {
+                RoomTypes = typeService.allRoomTypes()
+            };
+
+            return room;
+        }
+        public async Task<bool> CreateRoomAsync(RoomFormModel model)
+        {
+            var newRoom = new RoomEntity()
+            {
+                RoomNumber = model.RoomNumber,
+                Floor = model.Floor,
+                IsAvailable = model.IsAvailable,
+                RoomTypeId = model.RoomTypeId,
+
+            };
+
+            dbContext.Rooms.Add(newRoom);
+            await dbContext.SaveChangesAsync();
+
+            return true;
         }
         public async Task<bool> EditRoomAsync(int id, RoomFormModel editModel)
         {
@@ -104,16 +130,28 @@ namespace HotelApp.Corе.Services
                 Floor = roomToEdit.Floor,
                 IsAvailable = roomToEdit.IsAvailable,
                 RoomTypeId = roomToEdit.RoomTypeId,
-                RoomTypes = await dbContext.RoomTypes
-                    .Select(rt => new RoomTypeEntity()
-                    {
-                        Id = rt.Id,
-                        Name = rt.Name
-                    })
-                    .ToListAsync()
-                    };
+                RoomTypes = typeService.allRoomTypes()
+            };
 
             return roomModel;
+        }
+        public async Task<bool> DeleteRoomAsync(int id)
+        {
+            if (!await validationService.IsValidIdAsync(id))
+            {
+                return false;
+            }
+
+            var room = await dbContext.Rooms.FindAsync(id);
+            if (!await validationService.ExistsAsync(room))
+            {
+                return false;
+            }
+
+            dbContext.Rooms.Remove(room);
+            await dbContext.SaveChangesAsync();
+
+            return true;
         }
     }
 }

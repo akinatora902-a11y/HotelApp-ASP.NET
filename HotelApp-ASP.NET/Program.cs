@@ -14,6 +14,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddApplicationDbContext(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddScoped<IValidationService, ValidationService>();
+builder.Services.AddScoped<ITypeService, TypeService>();
 
 var app = builder.Build();
 
