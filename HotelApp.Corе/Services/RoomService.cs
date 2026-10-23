@@ -49,7 +49,6 @@ namespace HotelApp.Corе.Services
 
             roomToEdit.RoomNumber = editModel.RoomNumber;
             roomToEdit.Floor = editModel.Floor;
-            roomToEdit.RoomType.PricePerNight = editModel.PricePerNight;
             roomToEdit.IsAvailable = editModel.IsAvailable;
             roomToEdit.RoomTypeId = editModel.RoomTypeId;
 
@@ -99,11 +98,10 @@ namespace HotelApp.Corе.Services
                 return null;
             }
 
-            return new RoomFormModel()
+            var roomModel = new RoomFormModel()
             {
                 RoomNumber = roomToEdit.RoomNumber,
                 Floor = roomToEdit.Floor,
-                PricePerNight = roomToEdit.RoomType.PricePerNight,
                 IsAvailable = roomToEdit.IsAvailable,
                 RoomTypeId = roomToEdit.RoomTypeId,
                 RoomTypes = await dbContext.RoomTypes
@@ -113,7 +111,9 @@ namespace HotelApp.Corе.Services
                         Name = rt.Name
                     })
                     .ToListAsync()
-            };
+                    };
+
+            return roomModel;
         }
     }
 }

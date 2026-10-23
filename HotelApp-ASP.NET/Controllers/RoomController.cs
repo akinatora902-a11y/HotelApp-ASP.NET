@@ -26,7 +26,7 @@ namespace HotelApp_ASP.NET.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var roomModel = await roomService.GetRoomDetailsAsync(id);
+            var roomModel = await roomService.GetRoomForEditAsync(id);
 
             return View(roomModel);
         }

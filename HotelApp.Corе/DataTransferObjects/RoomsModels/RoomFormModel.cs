@@ -6,6 +6,8 @@ namespace HotelApp_ASP.NET.ViewModels.RoomsModels
 {
     public class RoomFormModel
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Room number is required.")]
         [Range(RoomNumberMinValue, RoomNumberMaxValue, ErrorMessage = "Room number must be between {1} and {2}.")]
         public int RoomNumber { get; set; }
