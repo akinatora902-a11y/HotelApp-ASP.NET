@@ -69,9 +69,9 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(RoomDetailsViewModel model)
         {
-            bool delete = await roomService.DeleteRoomAsync(id);
+            bool delete = await roomService.DeleteRoomAsync(model.Id);
 
             if (!delete)
             {
