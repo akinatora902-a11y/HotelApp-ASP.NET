@@ -5,6 +5,7 @@ using HotelApp.Corе.Services;
 using HotelApp.Data;
 using HotelApp_ASP.NET.Extensions;
 using Microsoft.EntityFrameworkCore;
+using HotelApp.Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplicationDbContext(builder.Configuration);
+builder.Services.AddApplicationIdentity();
+builder.Services.AddRazorPages();
 builder.Services.AddApplicationServices();
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<ITypeService, TypeService>();
@@ -31,10 +34,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();
