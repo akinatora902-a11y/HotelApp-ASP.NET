@@ -7,8 +7,8 @@ namespace HotelApp_ASP.NET.Controllers
     public class BookingController(IBookingService bookingService) : Controller
     {
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        HttpGet]
+public async Task<IActionResult> Index()
         {
             var allBookings = await bookingService.AllBookingAsync();
 
@@ -16,20 +16,24 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details (int Id)
+        public async Task<IActionResult> Details(int id)
         {
+            var details = await bookingService.DetailAsync(id);
 
-            var details = await bookingService.DetailAsync(Id);
+            if (details == null)
+            {
+                return NotFound();
+            }
 
             return View(details);
         }
-        
-        [HttpGet] 
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var addBokingform = await bookingService.CreateFormModelAsync();
+            var addBookingForm = await bookingService.CreateFormModelAsync();
 
-            return View(addBokingform);
+            return View(addBookingForm);
         }
 
         [HttpPost]
@@ -37,6 +41,9 @@ namespace HotelApp_ASP.NET.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var form = await bookingService.CreateFormModelAsync();
+                model.Rooms = form.Rooms;
+
                 return View(model);
             }
 
@@ -44,8 +51,12 @@ namespace HotelApp_ASP.NET.Controllers
 
             if (!isCreated)
             {
-                return BadRequest();
+                var form = await bookingService.CreateFormModelAsync();
+                model.Rooms = form.Rooms;
+
+                return View(model);
             }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -65,15 +76,14 @@ namespace HotelApp_ASP.NET.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            bool delete = await bookingService.DeleteBookingAsync(id);
+            bool deleted = await bookingService.DeleteBookingAsync(id);
 
-            if (!delete)
+            if (!deleted)
             {
-                return BadRequest();
+                return NotFound();
             }
 
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

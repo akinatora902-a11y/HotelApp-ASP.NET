@@ -13,151 +13,204 @@ namespace HotelApp.Corе.Services
     {
         public async Task<IEnumerable<BookingIndexViewModel>> AllBookingAsync()
         {
-            var allBookings = await dbContext.Bookings
-               .OrderBy(b => b.Id)
-               .ThenBy(b => b.RoomId)
-               .Include(r => r.Room)
-               .Select(b => new BookingIndexViewModel()
-               {
-                   Id = b.Id,
-                   GuestName = b.GuestName,
-                   GuestEmail = b.GuestEmail,
-                   GuestPhone = b.GuestPhone,
-                   CheckInDate = b.CheckInDate.ToString(DateFormat),
-                   CheckOutDate = b.CheckOutDate.ToString(DateFormat),
-                   TotalPrice = b.TotalPrice,
-                   RoomNumber = b.Room.RoomNumber,
-               })
-               .Take(EntityPerPages)
-               .ToArrayAsync();
-
-            if (!await validationService.HasAnyAsync(allBookings))
+            try
             {
-                return Enumerable.Empty<BookingIndexViewModel>();
-            }
+                var allBookings = await dbContext.Bookings
+                    .OrderBy(b => b.Id)
+                    .ThenBy(b => b.RoomId)
+                    .Select(b => new BookingIndexViewModel()
+                    {
+                        Id = b.Id,
+                        GuestName = b.GuestName,
+                        GuestEmail = b.GuestEmail,
+                        GuestPhone = b.GuestPhone,
+                        CheckInDate = b.CheckInDate.ToString(DateFormat),
+                        CheckOutDate = b.CheckOutDate.ToString(DateFormat),
+                        TotalPrice = b.TotalPrice,
+                        RoomNumber = b.Room.RoomNumber,
+                    })
+                    .Take(EntityPerPages)
+                    .ToArrayAsync();
 
-            return allBookings;
+                if (!await validationService.HasAnyAsync(allBookings))
+                {
+                    return Enumerable.Empty<BookingIndexViewModel>();
+                }
+
+                return allBookings;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("An error occurred while retrieving the bookings.", ex);
+            }
         }
 
         public async Task<bool> CreateBookingAsync(BookingFormModel model)
         {
-            var room = await dbContext.Rooms.FirstOrDefaultAsync(r => r.Id == model.RoomId);
-            if (!await validationService.ExistsAsync(room))
+            try
             {
-                return false;
+                if (!await validationService.IsValidIdAsync(model.RoomId))
+                {
+                    return false;
+                }
+
+                if (!await validationService.IsNotNullOrWhiteSpaceAsync(model.GuestName) ||
+                    !await validationService.IsNotNullOrWhiteSpaceAsync(model.GuestEmail) ||
+                    !await validationService.IsNotNullOrWhiteSpaceAsync(model.GuestPhone))
+                {
+                    return false;
+                }
+
+                var room = await dbContext.Rooms.FirstOrDefaultAsync(r => r.Id == model.RoomId);
+
+                if (!await validationService.ExistsAsync(room))
+                {
+                    return false;
+                }
+
+                var totalDays = (model.CheckOutDate - model.CheckInDate).Days;
+                var roomPrice = await dbContext.Rooms
+                    .Where(r => r.Id == model.RoomId)
+                    .Select(r => r.RoomType.PricePerNight)
+                    .FirstOrDefaultAsync();
+
+                var newBooking = new BookingEntity()
+                {
+                    GuestName = model.GuestName,
+                    GuestEmail = model.GuestEmail,
+                    GuestPhone = model.GuestPhone,
+                    RoomId = model.RoomId,
+                    CheckInDate = model.CheckInDate,
+                    CheckOutDate = model.CheckOutDate,
+                    TotalPrice = totalDays * roomPrice
+                };
+
+                dbContext.Bookings.Add(newBooking);
+                room.IsAvailable = false;
+                await dbContext.SaveChangesAsync();
+
+                return true;
             }
-
-            var totalDays = (model.CheckOutDate - model.CheckInDate).Days;
-            var roomPrice = await dbContext.Rooms
-                .Where(r => r.Id == model.RoomId)
-                .Select(r => r.RoomType.PricePerNight)
-                .FirstOrDefaultAsync();
-
-            var newBooking = new BookingEntity()
+            catch (Exception ex)
             {
-                GuestName = model.GuestName,
-                GuestEmail = model.GuestEmail,
-                GuestPhone = model.GuestPhone,
-                RoomId = model.RoomId,
-                CheckInDate = model.CheckInDate,
-                CheckOutDate = model.CheckOutDate,
-                TotalPrice = totalDays * roomPrice 
-
-            };
-
-            dbContext.Bookings.Add(newBooking);
-            room.IsAvailable = false;
-            await dbContext.SaveChangesAsync();
-
-            return true;
+                throw new ArgumentException("An error occurred while creating the booking.", ex);
+            }
         }
 
         public async Task<BookingDetailsViewModel> DetailAsync(int id)
         {
-            if (!await validationService.IsValidIdAsync(id))
+            try
             {
-                return null;
-            }
-
-            var details = await dbContext.Bookings
-                .Where(b => b.Id == id)
-                .Select(d => new BookingDetailsViewModel()
+                if (!await validationService.IsValidIdAsync(id))
                 {
-                    Id = d.Id,
-                    GuestName = d.GuestName,
-                    GuestEmail = d.GuestEmail,
-                    GuestPhone = d.GuestPhone,
-                    CheckInDate = d.CheckInDate.ToString(DateFormat),
-                    CheckOutDate = d.CheckOutDate.ToString(DateFormat),
-                    TotalPrice = d.TotalPrice,
-                    RoomNumber = d.Room.RoomNumber,
-                    RoomTypeName = d.Room.RoomType.Name
-                })
-                .FirstOrDefaultAsync();
+                    return null;
+                }
 
-            if (!await validationService.ExistsAsync(details))
-            {
-                return null;
+                var details = await dbContext.Bookings
+                    .Where(b => b.Id == id)
+                    .Select(d => new BookingDetailsViewModel()
+                    {
+                        Id = d.Id,
+                        GuestName = d.GuestName,
+                        GuestEmail = d.GuestEmail,
+                        GuestPhone = d.GuestPhone,
+                        CheckInDate = d.CheckInDate.ToString(DateFormat),
+                        CheckOutDate = d.CheckOutDate.ToString(DateFormat),
+                        TotalPrice = d.TotalPrice,
+                        RoomNumber = d.Room.RoomNumber,
+                        RoomTypeName = d.Room.RoomType.Name
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (!await validationService.ExistsAsync(details))
+                {
+                    return null;
+                }
+
+                return details;
             }
-
-            return details;
+            catch (Exception ex)
+            {
+                throw new ArgumentException("An error occurred while retrieving the booking details.", ex);
+            }
         }
 
         public async Task<BookingFormModel> CreateFormModelAsync()
         {
-            var addBookingForm = new BookingFormModel()
+            try
             {
-                CheckInDate = DateTime.Today,
-                CheckOutDate = DateTime.Today.AddDays(1),
-                Rooms = await AvailableRoomsAsync()
-            };
+                var addBookingForm = new BookingFormModel()
+                {
+                    CheckInDate = DateTime.Today,
+                    CheckOutDate = DateTime.Today.AddDays(1),
+                    Rooms = await AvailableRoomsAsync()
+                };
 
-            return addBookingForm;
+                return addBookingForm;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("An error occurred while preparing the booking form.", ex);
+
+            }
         }
 
         public async Task<IEnumerable<AvailableRoomsDropdown>> AvailableRoomsAsync()
         {
-            var roomsList = await dbContext.Rooms
-                .Include(r => r.RoomType)
-                .Where(r => r.IsAvailable)
-                .Select(r => new AvailableRoomsDropdown
-                {
-                    Id = r.Id,
-                    RoomType = r.RoomType.Name
-                })
-                .ToListAsync();
-
-            if (!await validationService.HasAnyAsync(roomsList))
+            try
             {
-                return Enumerable.Empty<AvailableRoomsDropdown>();
-            }
+                var roomsList = await dbContext.Rooms
+                    .Where(r => r.IsAvailable)
+                    .Select(r => new AvailableRoomsDropdown
+                    {
+                        Id = r.Id,
+                        RoomType = r.RoomType.Name
+                    })
+                    .ToListAsync();
 
-            return roomsList;
+                if (!await validationService.HasAnyAsync(roomsList))
+                {
+                    return Enumerable.Empty<AvailableRoomsDropdown>();
+                }
+
+                return roomsList;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("An error occurred while retrieving the available rooms.", ex);
+            }
         }
 
         public async Task<bool> DeleteBookingAsync(int id)
         {
-            if (!await validationService.IsValidIdAsync(id))
+            try
             {
-                return false;
-            }
+                if (!await validationService.IsValidIdAsync(id))
+                {
+                    return false;
+                }
 
-            var deleteBooking = await dbContext.Bookings.FindAsync(id);
-            if (!await validationService.ExistsAsync(deleteBooking))
+                var deleteBooking = await dbContext.Bookings.FindAsync(id);
+                if (!await validationService.ExistsAsync(deleteBooking))
+                {
+                    return false;
+                }
+
+                var room = await dbContext.Rooms.FindAsync(deleteBooking.RoomId);
+                if (await validationService.ExistsAsync(room))
+                {
+                    room.IsAvailable = true;
+                }
+
+                dbContext.Bookings.Remove(deleteBooking);
+                await dbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
             {
-                return false;
+                throw new ArgumentException("An error occurred while deleting the booking.", ex);
             }
-
-            var room = await dbContext.Rooms.FindAsync(deleteBooking.RoomId);
-            if (await validationService.ExistsAsync(room))
-            {
-                room.IsAvailable = true;
-            }
-
-            dbContext.Bookings.Remove(deleteBooking);
-            await dbContext.SaveChangesAsync();
-
-            return true;
         }
 
     }
