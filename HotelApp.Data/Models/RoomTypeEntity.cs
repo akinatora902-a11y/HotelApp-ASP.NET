@@ -8,11 +8,11 @@ namespace HotelApp.Data.Models
     {
         [Key]
         public int Id { get; set; }
-        
+
         [Required]
         [StringLength(RoomTypeNameMaxLength, MinimumLength = RoomTypeNameMinLength)]
         public string Name { get; set; }
-        
+
         public int Capacity { get; set; }
 
         [StringLength(RoomTypeDescriptionMaxLength)]

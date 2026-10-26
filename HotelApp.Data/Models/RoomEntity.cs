@@ -25,5 +25,5 @@ namespace HotelApp.Data.Models
         public virtual RoomTypeEntity RoomType { get; set; } = null!;
 
         public virtual ICollection<BookingEntity> Bookings { get; set; } = new HashSet<BookingEntity>();
-    }   
+    }
 }

@@ -3,11 +3,8 @@ using HotelApp.Common.Service;
 using HotelApp.Corе.Contracts;
 using HotelApp.Corе.Services;
 using HotelApp.Data;
-using HotelApp.Data.Models;
 using HotelApp_ASP.NET.Extensions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,7 +52,7 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-using (var scope = app.Services.CreateScope()) 
+using (var scope = app.Services.CreateScope())
 {
     var roleManeger = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -68,28 +65,28 @@ using (var scope = app.Services.CreateScope())
     {
         bool vall = await roleManeger.RoleExistsAsync(role);
 
-		if (!await roleManeger.RoleExistsAsync(role))
+        if (!await roleManeger.RoleExistsAsync(role))
             await roleManeger.CreateAsync(new IdentityRole(role));
     }
 }
 
 using (var scope = app.Services.CreateScope())
 {
-	var userManager =
-		scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager =
+        scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-	string email = "main@abv.bg";
-	string password = "123456";
+    string email = "main@abv.bg";
+    string password = "123456";
 
-	if (await userManager.FindByEmailAsync(email) == null)
-	{
-		var user = new IdentityUser();
-		user.UserName = email;
-		user.Email = email;
+    if (await userManager.FindByEmailAsync(email) == null)
+    {
+        var user = new IdentityUser();
+        user.UserName = email;
+        user.Email = email;
 
-		await userManager.CreateAsync(user, password);
+        await userManager.CreateAsync(user, password);
         await userManager.AddToRoleAsync(user, "Admin");
-	}
+    }
 }
 
 app.Run();

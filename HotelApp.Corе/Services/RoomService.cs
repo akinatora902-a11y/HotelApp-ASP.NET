@@ -2,10 +2,8 @@
 using HotelApp.Corе.Contracts;
 using HotelApp.Data;
 using HotelApp.Data.Models;
-using HotelApp_ASP.NET.ViewModels;
 using HotelApp_ASP.NET.ViewModels.RoomsModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static HotelApp.Common.ValidationConstants.AppValidation;
 namespace HotelApp.Corе.Services
 {

@@ -1,6 +1,4 @@
-﻿using HotelApp.Corе.DataTransferObjects;
-using HotelApp.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static HotelApp.Common.ValidationConstants.EntityValidation;
 
 namespace HotelApp_ASP.NET.ViewModels.RoomsModels

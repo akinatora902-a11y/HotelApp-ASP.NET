@@ -1,9 +1,4 @@
 ﻿using HotelApp.Common.Contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HotelApp.Common.Service
 {
@@ -12,7 +7,7 @@ namespace HotelApp.Common.Service
         public Task<bool> IsValidIdAsync(int id)
         {
             return Task.FromResult(id > 0);
-        }   
+        }
 
         public Task<bool> ExistsAsync<T>(T? entity) where T : class
         {

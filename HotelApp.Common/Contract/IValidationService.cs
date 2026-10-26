@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace HotelApp.Common.Contract
+﻿namespace HotelApp.Common.Contract
 {
-    public interface IValidationService 
+    public interface IValidationService
     {
         public Task<bool> IsValidIdAsync(int id);
 

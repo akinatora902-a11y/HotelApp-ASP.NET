@@ -1,9 +1,6 @@
 ﻿using HotelApp.Data.Configurations;
-using HotelApp.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using HotelApp.Data.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace HotelApp.Data
 {

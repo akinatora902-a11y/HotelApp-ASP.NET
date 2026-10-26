@@ -8,7 +8,7 @@ namespace HotelApp_ASP.NET.Controllers
     {
 
         [HttpGet]
-public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var allBookings = await bookingService.AllBookingAsync();
 
@@ -37,7 +37,7 @@ public async Task<IActionResult> Index()
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create (BookingFormModel model)
+        public async Task<IActionResult> Create(BookingFormModel model)
         {
             if (!ModelState.IsValid)
             {
