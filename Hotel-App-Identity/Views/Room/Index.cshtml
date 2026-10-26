@@ -6,13 +6,18 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="mb-0">Room List</h2>
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="bi bi-plus-lg"></i> Add New Room
-    </a>
+    
+    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Add New Room
+        </a>
+    }
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 g-4">
     @if (Model != null && Model.Any())
+    {
         @foreach (var room in Model)
         {
             <div class="col">
@@ -33,22 +38,27 @@
                             @room.PricePerNight.ToString("C2") / night
                         </p>
                     </div>
-                    <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                    <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
                         <a asp-action="Details" asp-route-id="@room.Id" class="btn btn-outline-info btn-sm">
                             <i class="bi bi-info-circle"></i> Details
                         </a>
-                        <div>
-                            <a asp-action="Edit" asp-route-id="@room.Id" class="btn btn-outline-warning btn-sm me-1">
-                                <i class="bi bi-pencil"></i> Edit
-                            </a>
-                            <a asp-action="Delete" asp-route-id="@room.Id" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-trash"></i> Delete
-                            </a>
-                        </div>
+                        
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
+                        {
+                            <div>
+                                <a asp-action="Edit" asp-route-id="@room.Id" class="btn btn-outline-warning btn-sm me-1">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-room-id="@room.Id" data-room-number="@room.RoomNumber">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         }
+    }
     else
     {
         <div class="col-12 text-center my-5">
@@ -58,6 +68,7 @@
         </div>
     }
 </div>
+
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -82,16 +93,18 @@
 @section Scripts {
     <script>
         var deleteModal = document.getElementById('deleteModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var roomId = button.getAttribute('data-room-id');
-            var roomNumber = button.getAttribute('data-room-number');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var roomId = button.getAttribute('data-room-id');
+                var roomNumber = button.getAttribute('data-room-number');
 
-            var modalRoomIdInput = deleteModal.querySelector('#modalRoomId');
-            var modalRoomNumberSpan = deleteModal.querySelector('#modalRoomNumber');
+                var modalRoomIdInput = deleteModal.querySelector('#modalRoomId');
+                var modalRoomNumberSpan = deleteModal.querySelector('#modalRoomNumber');
 
-            modalRoomIdInput.value = roomId;
-            modalRoomNumberSpan.textContent = roomNumber;
-        });
+                modalRoomIdInput.value = roomId;
+                modalRoomNumberSpan.textContent = roomNumber;
+            });
+        }
     </script>
 }

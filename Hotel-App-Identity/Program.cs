@@ -55,5 +55,41 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-app.Run();
+using (var scope = app.Services.CreateScope()) 
+{
+    var roleManeger = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+    var roles = new[]
+    {
+        "Admin", "User"
+    };
+
+    foreach (var role in roles)
+    {
+        bool vall = await roleManeger.RoleExistsAsync(role);
+
+		if (!await roleManeger.RoleExistsAsync(role))
+            await roleManeger.CreateAsync(new IdentityRole(role));
+    }
+}
+
+using (var scope = app.Services.CreateScope())
+{
+	var userManager =
+		scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+	string email = "main@abv.bg";
+	string password = "123456";
+
+	if (await userManager.FindByEmailAsync(email) == null)
+	{
+		var user = new IdentityUser();
+		user.UserName = email;
+		user.Email = email;
+
+		await userManager.CreateAsync(user, password);
+        await userManager.AddToRoleAsync(user, "Admin");
+	}
+}
+
+app.Run();

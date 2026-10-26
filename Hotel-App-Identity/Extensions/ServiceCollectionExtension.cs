@@ -42,6 +42,7 @@ namespace HotelApp_ASP.NET.Extensions
 				options.Password.RequireNonAlphanumeric = false;
 				options.Password.RequiredLength = 3;
 			})
+			.AddRoles<IdentityRole>()
 			.AddEntityFrameworkStores<HotelDbContext>();
 
 			return services;
