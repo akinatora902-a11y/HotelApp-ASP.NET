@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace HotelApp.Data
 {
-    public class HotelDbContext : IdentityDbContext<ApplicationUser>
+    public class HotelDbContext : IdentityDbContext
     {
         public HotelDbContext(DbContextOptions<HotelDbContext> options) : base(options)
         {
