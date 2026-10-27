@@ -1,9 +1,11 @@
 ﻿using HotelApp.Corе.Contracts;
 using HotelApp_ASP.NET.ViewModels.BookingsModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelApp_ASP.NET.Controllers
 {
+    [Authorize]
     public class BookingController(IBookingService bookingService) : Controller
     {
 

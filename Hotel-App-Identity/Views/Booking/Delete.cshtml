@@ -25,7 +25,6 @@
                 <p class="mb-4"><span class="fw-bold">Total amount:</span> @Model.TotalPrice.ToString("C2")</p>
 
                 <form asp-controller="Booking" asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post">
-                    <!-- Скритото поле изпраща DELETE заявка към [HttpDelete] в контролера -->
                     <input type="hidden" name="_method" value="DELETE" />
                     <input type="hidden" asp-for="Id" />
 

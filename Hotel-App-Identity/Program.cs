@@ -14,13 +14,7 @@ builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer(co
 
 
 builder.Services.AddControllersWithViews();
-//builder.Services.AddControllersWithViews(options =>
-//{
-//	var policy = new AuthorizationPolicyBuilder()
-//					 .RequireAuthenticatedUser()
-//					 .Build();
-//	options.Filters.Add(new AuthorizeFilter(policy));
-//});
+
 builder.Services.AddApplicationDbContext(builder.Configuration);
 builder.Services.AddApplicationIdentity(builder.Configuration);
 builder.Services.AddRazorPages();
@@ -52,41 +46,7 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManeger = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    var roles = new[]
-    {
-        "Admin", "User"
-    };
-
-    foreach (var role in roles)
-    {
-        bool vall = await roleManeger.RoleExistsAsync(role);
-
-        if (!await roleManeger.RoleExistsAsync(role))
-            await roleManeger.CreateAsync(new IdentityRole(role));
-    }
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var userManager =
-        scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-
-    string email = "main@abv.bg";
-    string password = "123456";
-
-    if (await userManager.FindByEmailAsync(email) == null)
-    {
-        var user = new IdentityUser();
-        user.UserName = email;
-        user.Email = email;
-
-        await userManager.CreateAsync(user, password);
-        await userManager.AddToRoleAsync(user, "Admin");
-    }
-}
+await app.SeedRolesAsync();
+await app.SeedAdminAsync();
 
 app.Run();

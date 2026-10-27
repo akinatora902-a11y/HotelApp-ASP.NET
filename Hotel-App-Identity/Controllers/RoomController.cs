@@ -1,9 +1,11 @@
 ﻿using HotelApp.Corе.Contracts;
 using HotelApp_ASP.NET.ViewModels.RoomsModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelApp_ASP.NET.Controllers
 {
+    [Authorize]
     public class RoomController(IRoomService roomService) : Controller
     {
         [HttpGet]
@@ -15,6 +17,7 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int id)
         {
             var detailsForRoom = await roomService.GetRoomDetailsAsync(id);
@@ -28,6 +31,7 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var roomModel = await roomService.GetRoomForEditAsync(id);
@@ -41,6 +45,7 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, RoomFormModel model)
         {
             if (!ModelState.IsValid)
@@ -62,6 +67,7 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create()
         {
             var roomCreateForm = await roomService.CreateFormAsync();
@@ -70,6 +76,7 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(RoomFormModel model)
         {
             if (!ModelState.IsValid)
@@ -91,6 +98,7 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await roomService.GetRoomDetailsAsync(id);
@@ -104,6 +112,7 @@ namespace HotelApp_ASP.NET.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(RoomDetailsViewModel model)
         {
             bool deleted = await roomService.DeleteRoomAsync(model.Id);

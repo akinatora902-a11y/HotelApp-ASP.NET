@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace HotelApp_ASP.NET.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
