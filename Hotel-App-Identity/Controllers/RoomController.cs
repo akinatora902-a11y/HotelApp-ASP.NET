@@ -113,7 +113,7 @@ namespace HotelApp_ASP.NET.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(RoomDetailsViewModel model)
+        public async Task<IActionResult> DeleteConfirmed(RoomDetailsViewModel model)
         {
             bool deleted = await roomService.DeleteRoomAsync(model.Id);
 

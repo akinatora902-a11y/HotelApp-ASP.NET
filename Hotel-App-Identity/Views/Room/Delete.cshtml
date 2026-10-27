@@ -40,8 +40,13 @@
                 </dd>
             </dl>
 
-            <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+            <form asp-action="Delete" method="post">
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="RoomNumber" />
+                <input type="hidden" asp-for="Floor" />
+                <input type="hidden" asp-for="RoomTypeName" />
+                <input type="hidden" asp-for="PricePerNight" />
+                <input type="hidden" asp-for="IsAvailable" />
 
                 <div class="d-flex justify-content-between">
                     <a asp-action="Index" class="btn btn-secondary">
