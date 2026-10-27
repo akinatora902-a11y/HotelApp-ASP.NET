@@ -1,8 +1,25 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <p class="lead">Welcome back, <strong>@User.Identity?.Name</strong>! We're glad to see you.</p>
+        <p>You can check out your profile or continue to the other pages.</p>
+    }
+    else
+    {
+        <p class="lead">Welcome! You are not signed in yet.</p>
+        <p>
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+            <a class="btn btn-outline-secondary" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </p>
+    }
+
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
