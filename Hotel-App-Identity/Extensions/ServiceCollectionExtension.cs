@@ -33,16 +33,9 @@ namespace HotelApp_ASP.NET.Extensions
 
         public static IServiceCollection AddApplicationIdentity(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDefaultIdentity<IdentityUser>(options =>
-            {
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequiredLength = 3;
-            })
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<HotelDbContext>();
+            services.AddDefaultIdentity<IdentityUser>(options => ConfigureIdentityOptions(options, configuration))
+                    .AddRoles<IdentityRole>()
+                    .AddEntityFrameworkStores<HotelDbContext>();
 
             return services;
         }
